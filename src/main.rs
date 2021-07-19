@@ -92,12 +92,6 @@ pub fn to_atlas<K>(
             y: frame.frame.y,
             w: frame.frame.w,
             h: frame.frame.h,
-            screen: Screen {
-                x: 1. / (image_width as f32 / frame.frame.x as f32),
-                y: 1. / (image_height as f32 / frame.frame.y as f32),
-                w: 1. / (image_width as f32 / frame.frame.w as f32),
-                h: 1. / (image_height as f32 / frame.frame.h as f32),
-            },
         })
         .collect();
 
