@@ -1,5 +1,6 @@
+use regex::Regex;
 use std::path::PathBuf;
-use regex::{Regex};
+use serde::{Serialize,  Deserialize};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct FileData {
@@ -9,12 +10,9 @@ pub struct FileData {
 }
 
 pub fn extract(path: PathBuf) -> FileData {
-    lazy_static! {
-        static ref RE: Regex = Regex::new(
-            r"(?P<name>[^:\\/]*?)(?:\.(?P<ext>[^ :\\/.]*))?$"
-        ).unwrap();
-    }
-    let file = RE.captures(&path.to_str().unwrap()).unwrap();
+
+    let ex = Regex::new(r"(?P<name>[^:\\/]*?)(?:\.(?P<ext>[^ :\\/.]*))?$").unwrap();
+    let file = ex.captures(&path.to_str().unwrap()).unwrap();
 
     FileData {
         path: path.clone(),

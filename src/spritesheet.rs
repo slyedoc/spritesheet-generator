@@ -1,6 +1,5 @@
+use serde::{Serialize, Serializer, Deserialize};
 use std::collections::{BTreeMap, HashMap};
-use serde::{Serialize, Serializer};
-
 use texture_packer;
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
@@ -28,20 +27,21 @@ pub struct Spritesheet {
 
 fn ordered_map<S>(value: &HashMap<String, Frame>, serializer: S) -> Result<S::Ok, S::Error>
 where
-S: Serializer,
+    S: Serializer,
 {
     let ordered: BTreeMap<_, _> = value.iter().collect();
     ordered.serialize(serializer)
 }
 
-pub fn to_atlas(
-    frames: &HashMap<String, texture_packer::Frame>,
+pub fn to_atlas<K>(
+    frames: &HashMap<String, texture_packer::Frame<K>>,
     image_width: u32,
     image_height: u32,
 ) -> Spritesheet {
     let frames_map = frames
         .iter()
-        .map(|(name, frame)| (
+        .map(|(name, frame)| {
+            (
                 name.clone(),
                 Frame {
                     x: frame.frame.x,
@@ -53,10 +53,10 @@ pub fn to_atlas(
                         y: 1. / (image_height as f32 / frame.frame.y as f32),
                         w: 1. / (image_width as f32 / frame.frame.w as f32),
                         h: 1. / (image_height as f32 / frame.frame.h as f32),
-                    }
-                }
+                    },
+                },
             )
-        )
+        })
         .collect();
 
     return Spritesheet { frames: frames_map };
@@ -68,16 +68,26 @@ mod tests {
 
     #[test]
     fn should_convert_to_atlas() {
-        let mut converted_frames: HashMap<String, texture_packer::Frame> = HashMap::new();
+        let mut converted_frames: HashMap<String, texture_packer::Frame<String>> = HashMap::new();
         converted_frames.insert(
             "test1".to_string(),
-            texture_packer::Frame {
+            texture_packer::Frame::<String> {
                 key: "test1".to_string(),
-                frame: texture_packer::Rect{ x: 0, y: 0, w: 10, h: 50},
-                source: texture_packer::Rect{ x: 0, y: 0, w: 10, h: 50},
+                frame: texture_packer::Rect {
+                    x: 0,
+                    y: 0,
+                    w: 10,
+                    h: 50,
+                },
+                source: texture_packer::Rect {
+                    x: 0,
+                    y: 0,
+                    w: 10,
+                    h: 50,
+                },
                 rotated: false,
                 trimmed: false,
-            }
+            },
         );
         let atlas = to_atlas(&converted_frames, 100, 100);
 
@@ -85,14 +95,32 @@ mod tests {
         created_frames.insert(
             "test1".to_string(),
             Frame {
-                x: 0, y: 0, w: 10, h: 50, screen: Screen { x: 0., y: 0., w: 0.1, h: 0.5 }
-            }
+                x: 0,
+                y: 0,
+                w: 10,
+                h: 50,
+                screen: Screen {
+                    x: 0.,
+                    y: 0.,
+                    w: 0.1,
+                    h: 0.5,
+                },
+            },
         );
         created_frames.insert(
             "test2".to_string(),
             Frame {
-                x: 1, y: 1, w: 1, h: 1, screen: Screen { x: 0., y: 0., w: 0., h: 0. }
-            }
+                x: 1,
+                y: 1,
+                w: 1,
+                h: 1,
+                screen: Screen {
+                    x: 0.,
+                    y: 0.,
+                    w: 0.,
+                    h: 0.,
+                },
+            },
         );
 
         let converted = atlas.frames.get("test1").unwrap();

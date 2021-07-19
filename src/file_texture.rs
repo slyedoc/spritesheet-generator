@@ -1,15 +1,16 @@
-use file_data;
-use image;
+use image::{self, DynamicImage};
 
 use std::fs;
 use texture_packer::importer::ImageImporter;
 
+use crate::file_data;
+
 pub struct FileTexture {
     pub file: file_data::FileData,
-    pub texture: image::DynamicImage,
+    pub texture: DynamicImage,
 }
 
-pub fn find_all (folder: String) -> Vec<FileTexture> {
+pub fn find_all(folder: String) -> Vec<FileTexture> {
     let mut file_list = Vec::new();
     if let Ok(entries) = fs::read_dir(&folder) {
         for entry in entries {
@@ -21,9 +22,8 @@ pub fn find_all (folder: String) -> Vec<FileTexture> {
                         file_list.extend(find_all(child_folder));
                     } else {
                         let file = file_data::extract(entry.path());
-                        let texture = ImageImporter::import_from_file(&entry.path())
-                            .unwrap();
-                        file_list.push(FileTexture {file, texture});
+                        let texture = ImageImporter::import_from_file(&entry.path()).unwrap();
+                        file_list.push(FileTexture { file, texture: texture });
                     }
                 }
             }
