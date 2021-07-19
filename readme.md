@@ -1,6 +1,6 @@
 # spritesheet-generator
 
-Started from [spritesheet-generator](https://github.com/rafaeldelboni/spritesheet-generator)
+Started from [spritesheet-generator](https://github.com/rafaeldelboni/spritesheet-generator), I might reloadup this without the fork later since its so different, but wanted to give credit.
 
 I wanted an easy to use cli tool for generating spritessheets for bevy, with a lib to export format info for deserialize
 to bevy
