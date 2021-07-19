@@ -1,6 +1,10 @@
-use serde::{Serialize, Serializer, Deserialize};
-use std::collections::{BTreeMap, HashMap};
+use serde::{Deserialize, Serialize};
+
+#[cfg(feature = "build-binary")]
 use texture_packer;
+
+#[cfg(feature = "build-binary")]
+use std::collections::HashMap;
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Screen {
@@ -12,6 +16,7 @@ pub struct Screen {
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Frame {
+    pub name: String,
     pub x: u32,
     pub y: u32,
     pub w: u32,
@@ -21,118 +26,32 @@ pub struct Frame {
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Spritesheet {
-    #[serde(serialize_with = "ordered_map")]
-    pub frames: HashMap<String, Frame>,
+    pub frames: Vec<Frame>,
 }
 
-fn ordered_map<S>(value: &HashMap<String, Frame>, serializer: S) -> Result<S::Ok, S::Error>
-where
-    S: Serializer,
-{
-    let ordered: BTreeMap<_, _> = value.iter().collect();
-    ordered.serialize(serializer)
-}
-
+#[cfg(feature = "build-binary")]
 pub fn to_atlas<K>(
     frames: &HashMap<String, texture_packer::Frame<K>>,
     image_width: u32,
     image_height: u32,
 ) -> Spritesheet {
+
     let frames_map = frames
         .iter()
-        .map(|(name, frame)| {
-            (
-                name.clone(),
-                Frame {
-                    x: frame.frame.x,
-                    y: frame.frame.y,
-                    w: frame.frame.w,
-                    h: frame.frame.h,
-                    screen: Screen {
-                        x: 1. / (image_width as f32 / frame.frame.x as f32),
-                        y: 1. / (image_height as f32 / frame.frame.y as f32),
-                        w: 1. / (image_width as f32 / frame.frame.w as f32),
-                        h: 1. / (image_height as f32 / frame.frame.h as f32),
-                    },
-                },
-            )
+        .map(|(name, frame)| Frame {
+            name: name.to_owned(),
+            x: frame.frame.x,
+            y: frame.frame.y,
+            w: frame.frame.w,
+            h: frame.frame.h,
+            screen: Screen {
+                x: 1. / (image_width as f32 / frame.frame.x as f32),
+                y: 1. / (image_height as f32 / frame.frame.y as f32),
+                w: 1. / (image_width as f32 / frame.frame.w as f32),
+                h: 1. / (image_height as f32 / frame.frame.h as f32),
+            },
         })
         .collect();
 
-    return Spritesheet { frames: frames_map };
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn should_convert_to_atlas() {
-        let mut converted_frames: HashMap<String, texture_packer::Frame<String>> = HashMap::new();
-        converted_frames.insert(
-            "test1".to_string(),
-            texture_packer::Frame::<String> {
-                key: "test1".to_string(),
-                frame: texture_packer::Rect {
-                    x: 0,
-                    y: 0,
-                    w: 10,
-                    h: 50,
-                },
-                source: texture_packer::Rect {
-                    x: 0,
-                    y: 0,
-                    w: 10,
-                    h: 50,
-                },
-                rotated: false,
-                trimmed: false,
-            },
-        );
-        let atlas = to_atlas(&converted_frames, 100, 100);
-
-        let mut created_frames: HashMap<String, Frame> = HashMap::new();
-        created_frames.insert(
-            "test1".to_string(),
-            Frame {
-                x: 0,
-                y: 0,
-                w: 10,
-                h: 50,
-                screen: Screen {
-                    x: 0.,
-                    y: 0.,
-                    w: 0.1,
-                    h: 0.5,
-                },
-            },
-        );
-        created_frames.insert(
-            "test2".to_string(),
-            Frame {
-                x: 1,
-                y: 1,
-                w: 1,
-                h: 1,
-                screen: Screen {
-                    x: 0.,
-                    y: 0.,
-                    w: 0.,
-                    h: 0.,
-                },
-            },
-        );
-
-        let converted = atlas.frames.get("test1").unwrap();
-        let created = created_frames.get("test1").unwrap();
-
-        assert_eq!(converted.x, created.x);
-        assert_eq!(converted.y, created.y);
-        assert_eq!(converted.w, created.w);
-        assert_eq!(converted.h, created.h);
-        assert_eq!(converted.screen.x, created.screen.x);
-        assert_eq!(converted.screen.y, created.screen.y);
-        assert_eq!(converted.screen.w, created.screen.w);
-        assert_eq!(converted.screen.h, created.screen.h);
-    }
+    Spritesheet { frames: frames_map }
 }

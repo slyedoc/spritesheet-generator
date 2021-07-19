@@ -2,8 +2,9 @@
 
 Started from [spritesheet-generator](https://github.com/rafaeldelboni/spritesheet-generator), I might reloadup this without the fork later since its so different, but wanted to give credit.
 
-I wanted an easy to use cli tool for generating spritessheets for bevy, with a lib to export format info for deserialize
-to bevy
+I wanted an easy to use cli tool for generating spritessheets for bevy, with a lib to export format info for deserialize.
+
+And without having workspaces, to try it out.
 
 This is really just exposing [texture_packer](https://github.com/PistonDevelopers/texture_packer).
 
