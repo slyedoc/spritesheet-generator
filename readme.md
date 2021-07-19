@@ -1,4 +1,4 @@
-# spritesheet-generator
+# spritesheet_generator
 
 Started from [spritesheet-generator](https://github.com/rafaeldelboni/spritesheet-generator), I might reloadup this without the fork later since its so different, but wanted to give credit.
 
