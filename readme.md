@@ -7,8 +7,6 @@ to bevy
 
 This is really just exposing [texture_packer](https://github.com/PistonDevelopers/texture_packer).
 
-Added built in cli for generating and then a lib that just export spritesheet for deserialize in bevy
-
 ## Notes
 
 When using with cargo you can pass commandline arguments with the '--'
