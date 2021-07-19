@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use bevy_reflect::TypeUuid;
+use bevy::reflect::TypeUuid;
 
 #[derive(TypeUuid)]
 #[uuid = "15c92900-00a3-44cf-ba48-c7518d9b3adf"]

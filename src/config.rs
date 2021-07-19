@@ -22,7 +22,7 @@ pub struct Config {
     #[clap(short = 'd', long)]
     pub debug_outlines: bool,
 
-    #[clap(short, long, default_value = "json", possible_values = &["json", "ron"])]
+    #[clap(short, long, default_value = "ron", possible_values = &["json", "ron"])]
     pub format: Format
 }
 

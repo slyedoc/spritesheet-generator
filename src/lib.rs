@@ -1,4 +1,4 @@
-pub mod spritesheet;
+pub mod sprite_sheet;
 
 #[cfg(feature = "build-binary")]
 pub mod config;

@@ -2,7 +2,7 @@ use texture_packer::exporter::ImageExporter;
 use texture_packer::texture::Texture;
 use texture_packer::{TexturePacker, TexturePackerConfig};
 
-use spritesheet_generator::spritesheet::*;
+use spritesheet_generator::sprite_sheet::*;
 
 #[cfg(feature = "build-binary")]
 use spritesheet_generator::{config, file_texture};

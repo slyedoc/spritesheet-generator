@@ -31,7 +31,6 @@ clap = { version = "3.0.0-beta.2", optional = true } # Using beta for derive con
 ron = { version = "0.6.4", optional = true }
 
 # Didnt plan on including bevy, but needed its type_uuid, and its not exported as a feature
-
-# see https://github.com/bevyengine/bevy/issues/32 for alot more info on this, for now using
-# type_uuid since bevy_asset_ron - https://github.com/jamadazi/bevy_asset_ron uses it
-bevy_reflect = "0.5.0"
+# see https://github.com/bevyengine/bevy/issues/32 for alot more info on this
+#bevy_reflect = { version = "0.5", optional = false }  #didn't work, rust still thinks its a different version, will try other ways later
+bevy = { git = "https://github.com/bevyengine/bevy", branch = "main", default-features = true }
