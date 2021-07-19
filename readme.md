@@ -18,3 +18,5 @@ Examples
 ```bash
 cargo run --bin sprite-gen --features build-binary -- -i ../kenney/stone-floor -o ../kenney/generated -n stone-floor --format ron
 ```
+
+Got Uuid from [uuidtools](https://www.uuidtools.com/generate/v4)

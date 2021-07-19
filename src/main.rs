@@ -56,7 +56,7 @@ fn main() {
                 serde_json::to_writer_pretty(json_file, &atlas).unwrap();
             }
             spritesheet_generator::config::Format::Ron => {
-                let ron_path = format!("{}/{}.ron", config.output_folder, config.name);
+                let ron_path = format!("{}/{}.gen.ron", config.output_folder, config.name);
                 let ron_file = File::create(ron_path).unwrap();
                 let pretty = ron::ser::PrettyConfig::new()
                     .with_separate_tuple_members(true)
@@ -82,7 +82,7 @@ pub fn to_atlas<K>(
     frames: &HashMap<String, texture_packer::Frame<K>>,
     image_width: u32,
     image_height: u32,
-) -> Spritesheet {
+) -> SpriteSheet {
 
     let frames_map = frames
         .iter()
@@ -101,5 +101,5 @@ pub fn to_atlas<K>(
         })
         .collect();
 
-    Spritesheet { frames: frames_map }
+    SpriteSheet { frames: frames_map }
 }
