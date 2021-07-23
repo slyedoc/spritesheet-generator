@@ -13,10 +13,10 @@ pub struct Config {
     pub name: String,
     #[clap(short, long, default_value = "2")]
     pub border_padding: u32,
-    #[clap(long, default_value = "1024")]
-    pub max_width: u32,
-    #[clap(long, default_value = "1024")]
-    pub max_height: u32,
+    #[clap(short, long, default_value = "1024")]
+    pub width: u32,
+    #[clap(short, long, default_value = "1024")]
+    pub height: u32,
     #[clap(short, long)]
     pub allow_rotation: bool,
     #[clap(short = 'd', long)]

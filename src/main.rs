@@ -29,8 +29,8 @@ fn main() {
 
         // Perform texture packing
         let tp_config = TexturePackerConfig {
-            max_width: config.max_width,
-            max_height: config.max_height,
+            max_width: config.width,
+            max_height: config.height,
             border_padding: config.border_padding,
             allow_rotation: config.allow_rotation,
             texture_outlines: config.debug_outlines,
@@ -40,6 +40,11 @@ fn main() {
         let files = file_texture::find_all(config.input_folder);
 
         println!("File count: {}", files.len());
+
+        if files.len() == 0 {
+            panic!("Requires you run with '--features build-binary'");
+        }
+        
 
         for file_textures in files {
             packer
@@ -88,12 +93,25 @@ pub fn to_atlas<K>(
         .iter()
         .map(|(name, frame)| Frame {
             name: name.to_owned(),
-            x: frame.frame.x,
-            y: frame.frame.y,
-            w: frame.frame.w,
-            h: frame.frame.h,
+            position: Rect {
+                x: frame.frame.x,
+                y: frame.frame.y,
+                w: frame.frame.w,
+                h: frame.frame.h,
+            },
+            trimmed: frame.trimmed,
+            orginal: Rect {
+                x: frame.source.x,
+                y: frame.source.y,
+                w: frame.source.w,
+                h: frame.source.h,
+            },
         })
         .collect();
 
-    SpriteSheet { frames: frames_map }
+    SpriteSheet {
+        width: image_width,
+        height: image_height,
+        frames: frames_map,
+    }
 }
